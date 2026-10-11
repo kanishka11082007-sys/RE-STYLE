@@ -3,23 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --color-ivory: #F7F3EB;
-  --color-forest: #183D32;
-  --color-sage: #A7B7A0;
-  --color-terracotta: #C87556;
-  --color-charcoal: #242923;
+  --color-paper: #F7F4EE;
+  --color-navy: #253247;
+  --color-denim: #496E8A;
+  --color-bluegray: #E2EBF0;
+  --color-coral: #C96F52;
+  --color-gold: #D6AD64;
+  --color-charcoal: #27313D;
+  --color-charcoal-muted: #596575;
 }
 
 body {
-  background-color: #F7F3EB;
-  color: #242923;
+  background-color: #F7F4EE;
+  color: #27313D;
   background-image: 
-    radial-gradient(rgba(24, 61, 50, 0.035) 1px, transparent 1px);
+    radial-gradient(rgba(37, 50, 71, 0.04) 1px, transparent 1px);
   background-size: 28px 28px;
   overflow-x: hidden;
 }
 
-/* Custom editorial styles */
+/* Custom editorial typography styles */
 .font-serif-title {
   font-family: 'Playfair Display', Georgia, serif;
   letter-spacing: -0.02em;
@@ -33,13 +36,19 @@ body {
 .border-stitch {
   border-style: dashed;
   border-width: 1.5px;
-  border-color: rgba(167, 183, 160, 0.6);
+  border-color: rgba(73, 110, 138, 0.4);
 }
 
-.border-stitch-terracotta {
+.border-stitch-coral {
   border-style: dashed;
   border-width: 1.5px;
-  border-color: rgba(200, 117, 86, 0.6);
+  border-color: rgba(201, 111, 82, 0.6);
+}
+
+.border-stitch-gold {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(214, 173, 100, 0.6);
 }
 
 /* Custom scrollbar */
@@ -49,16 +58,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F7F3EB;
+  background: #F7F4EE;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D5DFC8;
+  background: #CBD7DE;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A7B7A0;
+  background: #8FB5D1;
 }
 
 /* Keyframes for subtle scanning animation */
@@ -84,13 +93,13 @@ body {
 /* Gentle pulse glow */
 @keyframes gentleGlow {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(200, 117, 86, 0.2);
+    box-shadow: 0 0 15px rgba(201, 111, 82, 0.2);
   }
   50% {
-    box-shadow: 0 0 25px rgba(200, 117, 86, 0.45);
+    box-shadow: 0 0 25px rgba(201, 111, 82, 0.45);
   }
 }
 
-.animate-glow-terracotta {
+.animate-glow-coral {
   animation: gentleGlow 3s ease-in-out infinite;
 }

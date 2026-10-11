@@ -15,6 +15,7 @@ import type { UpcycleIdea } from './data/upcyclingIdeas';
 
 export const App: React.FC = () => {
   const [currentFabric, setCurrentFabric] = useState<FabricSample>(SAMPLE_FABRICS[0]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
   const [selectedIdeaForGuide, setSelectedIdeaForGuide] = useState<UpcycleIdea | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -49,11 +50,11 @@ export const App: React.FC = () => {
     setIsAnalysisModalOpen(true);
     setTimeout(() => {
       setIsAnalyzing(false);
-    }, 3000);
+    }, 2800);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-ivory text-charcoal font-sans selection:bg-sage/40 selection:text-forest">
+    <div className="min-h-screen flex flex-col bg-paper text-charcoal font-sans selection:bg-bluegray selection:text-navy">
       {/* Sticky Navigation */}
       <Navbar
         onScrollToStudio={scrollToStudio}
@@ -78,11 +79,15 @@ export const App: React.FC = () => {
           onFabricChange={setCurrentFabric}
           onAnalyze={handleAnalyze}
           isAnalyzing={isAnalyzing}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
         />
 
         {/* Dynamic Upcycling Recommendations Gallery */}
         <RecommendationsGallery
           currentFabric={currentFabric}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
           onSelectIdeaForGuide={(idea) => setSelectedIdeaForGuide(idea)}
         />
 
@@ -99,12 +104,13 @@ export const App: React.FC = () => {
 
       {/* Detail / Making Guide Modal */}
       <MakingGuideModal
+        key={selectedIdeaForGuide?.id ?? 'none'}
         idea={selectedIdeaForGuide}
         fabric={currentFabric}
         onClose={() => setSelectedIdeaForGuide(null)}
       />
 
-      {/* AI Scanning & Analysis Modal */}
+      {/* Prototype Scanning & Simulation Modal */}
       <AIAnalysisModal
         isOpen={isAnalysisModalOpen}
         onClose={() => setIsAnalysisModalOpen(false)}

@@ -244,7 +244,7 @@ export const UPCYCLING_IDEAS: UpcycleIdea[] = [
       'Assorted fabric remnants with interesting fray or print',
       'Smooth wooden dowel or natural branch (35–45 cm)',
       'Hemp twine or jute cord for hanging',
-      'Embroidery floss in sage, ivory, and terracotta',
+      'Embroidery floss in denim, paper, and coral',
     ],
     toolsNeeded: [
       'Fabric shears',
@@ -291,7 +291,7 @@ export const UPCYCLING_IDEAS: UpcycleIdea[] = [
       '4x 12cm outer fabric squares from your scrap',
       '4x 12cm backing squares (flax or denim)',
       'Cotton fleece or flannel scrap for heat insulation',
-      'White or sage sashiko thread',
+      'White or golden sashiko thread',
     ],
     toolsNeeded: [
       'Rotary cutter or shears',
