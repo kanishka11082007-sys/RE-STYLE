@@ -1,55 +1,81 @@
-# Re:Style — Circular Fabric Studio & AI Design Assistant
+# 🌿 Re:Style — Circular AI Fashion Studio & Design Engine
 
-An AI-powered sustainable fashion assistant that helps independent designers and boutiques turn leftover fabric inventory into trendy product ideas using live web research via TinyFish Search and Google Gemini LLM.
-
-## Quickstart Guide
-
-### Option 1: Start Both with 1 Command (Recommended)
-```bash
-npm run dev:all
-```
-This launches both the Express backend (`http://localhost:5000`) and the Vite React frontend (`http://localhost:5173`) in one unified terminal.
-
-### Option 2: Run in Separate Terminals
-1. **Terminal 1 (Backend Server):**
-   ```bash
-   npm run server
-   ```
-2. **Terminal 2 (Frontend App):**
-   ```bash
-   npm run dev
-   ```
-
-Then open `http://localhost:5173` in your browser.
+An AI-augmented creative atelier and circular pattern simulator transforming textile offcuts and fabric remnants into bespoke, functional goods. Built with **Google Gemini Multimodal Vision** for fiber identification, **TinyFish Real-Time Web Search** for live sustainable fashion trends, and **React + Vite + Express** for interactive zero-waste atelier blueprints.
 
 ---
 
+## ✨ Features
 
-Currently, two official plugins are available:
+- **🔍 Multimodal Fiber Vision Inspection**: Drop or upload any fabric swatch from your computer. Gemini Vision inspects weave structure, tactile texture, fiber composition, and estimated GSM weight.
+- **🌐 Real-Time TinyFish Trend Research**: Queries live 2026 sustainable fashion trends tailored to the detected textile fiber (denim, silk, linen, wool, corduroy, velvet).
+- **🎨 AI Zero-Waste Concept Generator**: Synthesizes 5 commercially viable clothing and accessory concepts with realistic fabric usage, production costs, and carbon/water diversion accounting.
+- **✂️ Interactive Atelier Pattern Studio**: Set remnant dimensions, conditions, and color palettes to filter geometric cutting plans.
+- **🚀 Single-Container Unified Production Deployment**: Express backend automatically serves built frontend assets in production for zero-config cloud deployments.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, TypeScript, Tailwind CSS, Framer Motion, Lucide Icons, Vite
+- **Backend**: Node.js, Express 5, `node-fetch`, `dotenv`
+- **AI & Data Engines**:
+  - Google Gemini Multimodal Vision & LLM (`gemini-3.6-flash`, `gemini-3.7-flash`, `gemini-3.5-flash`)
+  - TinyFish Live Search API
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 🚀 Quick Start (Local Development)
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 1. Clone & Install
+```bash
+git clone <your-repo-url>
+cd re-style
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory (refer to `.env.example`):
+```env
+PORT=5000
+TINYFISH_API_KEY=your_tinyfish_api_key_here
+LLM_API_KEY=your_gemini_api_key_here
+```
+
+### 3. Launch the Application
+```bash
+# Run both Frontend & Backend concurrently
+npm run dev:all
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## 🚢 Deployment Options (Full-Stack Unified)
+
+The project is preconfigured so that in production, the Express backend serves the Vite production build (`dist/`) directly on `PORT`.
+
+### Option A: 1-Click Render.com Web Service
+1. Push this repository to your GitHub account.
+2. In [Render.com](https://render.com), click **New + > Web Service** and connect your GitHub repository (or use the included `render.yaml` Blueprint).
+3. Set the build and start commands:
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `node server.js`
+4. Add your Environment Secrets in Render's dashboard:
+   - `TINYFISH_API_KEY`
+   - `LLM_API_KEY`
+5. Click **Deploy**. Your full-stack app will be live at `https://your-app.onrender.com`.
+
+### Option B: Railway.app / Fly.io / Heroku
+Simply connect your GitHub repo. The buildpack will run `npm run build` and launch `node server.js` automatically.
+
+### Option C: Docker Container
+```bash
+docker build -t re-style .
+docker run -p 5000:5000 --env-file .env re-style
+```
+Visit `http://localhost:5000`.
+
+---
+
+## 🔒 Security Note
+Never commit your `.env` file containing live API keys. `.env` is included in `.gitignore` by default. Always configure API keys as environment variables in your hosting provider's dashboard.
