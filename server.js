@@ -78,13 +78,17 @@ async function fetchTinyFishTrends(fabricType) {
   const url = `https://api.search.tinyfish.ai?query=${encodeURIComponent(query)}&location=US`;
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
     const response = await fetch(url, {
       method: 'GET',
       headers: {
         'X-API-Key': TINYFISH_API_KEY,
         'Accept': 'application/json'
-      }
+      },
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       console.warn(`[TinyFish API Warning] Status: ${response.status} ${response.statusText}`);
@@ -139,13 +143,16 @@ Determine:
 
 Output strictly a VALID JSON object matching these fields, with no markdown code fences.`;
 
-  const models = ['gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-3.8-flash'];
+  const models = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.6-flash', 'gemini-3.7-flash'];
   for (const model of models) {
     try {
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${LLM_API_KEY}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 7000);
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           contents: [{
             parts: [
@@ -159,6 +166,7 @@ Output strictly a VALID JSON object matching these fields, with no markdown code
           }
         })
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         console.warn(`[Gemini Vision ${model}] Status: ${response.status}`);
@@ -199,7 +207,7 @@ Output strictly a VALID JSON object matching these fields, with no markdown code
  * Uses gemini-3.6-flash / 3.7-flash with resilient fallback
  */
 async function generateGeminiConcepts(fabricDetails, liveTrends) {
-  const modelsToTry = ['gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-3.8-flash'];
+  const modelsToTry = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.6-flash', 'gemini-3.7-flash'];
 
   const trendsSummary = liveTrends.length > 0
     ? liveTrends.map((t, idx) => `[Source ${idx + 1}] ${t.title}: "${t.snippet}" (${t.url})`).join('\n')
@@ -245,9 +253,12 @@ Each object MUST have the following exact schema:
   for (const model of modelsToTry) {
     try {
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${LLM_API_KEY}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 7000);
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
@@ -256,6 +267,7 @@ Each object MUST have the following exact schema:
           }
         })
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -360,7 +372,7 @@ function generateFallbackConcepts(fabricDetails, trendSources) {
 }
 
 // Textile Image Visual Inspection Endpoint
-app.post('/api/inspect-fabric-image', async (req, res) => {
+app.post(['/api/inspect-fabric-image', '/inspect-fabric-image'], async (req, res) => {
   try {
     const { image } = req.body || {};
     if (!image) {
@@ -386,7 +398,7 @@ app.post('/api/inspect-fabric-image', async (req, res) => {
 });
 
 // Main Design Generation Endpoint
-app.post('/api/generate-designs', async (req, res) => {
+app.post(['/api/generate-designs', '/generate-designs'], async (req, res) => {
   try {
     const body = req.body || {};
     let fabricType = body['fabric type'] || body.fabricType || body.fabric_type || body.material || body.name;
@@ -445,19 +457,23 @@ app.post('/api/generate-designs', async (req, res) => {
 // Serve production frontend assets if built
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(distPath, 'index.html'));
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/health') && !req.path.startsWith('/generate-designs') && !req.path.startsWith('/inspect-fabric-image')) {
+      return res.sendFile(path.join(distPath, 'index.html'));
+    }
+    next();
   });
 }
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`===============================================`);
-  console.log(`  🌿 Re:Style Backend Engine Live on port ${PORT}`);
-  console.log(`  🔗 Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`  🎨 Generate API: POST http://localhost:${PORT}/api/generate-designs`);
-  console.log(`===============================================`);
-});
+// Start Server when running standalone (not in Vercel serverless)
+if (process.env.VERCEL !== '1' && !process.env.VERCEL_ENV) {
+  app.listen(PORT, () => {
+    console.log(`===============================================`);
+    console.log(`  🌿 Re:Style Backend Engine Live on port ${PORT}`);
+    console.log(`  🔗 Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`  🎨 Generate API: POST http://localhost:${PORT}/api/generate-designs`);
+    console.log(`===============================================`);
+  });
+}
 
 export default app;
