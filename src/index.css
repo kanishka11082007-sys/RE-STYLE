@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-paper: #F7F4EE;
+  --color-navy: #253247;
+  --color-denim: #496E8A;
+  --color-bluegray: #E2EBF0;
+  --color-coral: #C96F52;
+  --color-gold: #D6AD64;
+  --color-charcoal: #27313D;
+  --color-charcoal-muted: #596575;
+}
+
+body {
+  background-color: #F7F4EE;
+  color: #27313D;
+  background-image: 
+    radial-gradient(rgba(37, 50, 71, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  overflow-x: hidden;
+}
+
+/* Custom editorial typography styles */
+.font-serif-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.font-editorial-sub {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Stitching / craft border effect */
+.border-stitch {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(73, 110, 138, 0.4);
+}
+
+.border-stitch-coral {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(201, 111, 82, 0.6);
+}
+
+.border-stitch-gold {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(214, 173, 100, 0.6);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F4EE;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD7DE;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8FB5D1;
+}
+
+/* Keyframes for subtle scanning animation */
+@keyframes fabricScan {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    top: 96%;
+    opacity: 1;
+  }
+  100% {
+    top: 0%;
+    opacity: 0.8;
+  }
+}
+
+.animate-scan-line {
+  animation: fabricScan 2.6s ease-in-out infinite;
+}
+
+/* Gentle pulse glow */
+@keyframes gentleGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(201, 111, 82, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(201, 111, 82, 0.45);
+  }
+}
+
+.animate-glow-coral {
+  animation: gentleGlow 3s ease-in-out infinite;
+}
