@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-ivory: #F7F3EB;
+  --color-forest: #183D32;
+  --color-sage: #A7B7A0;
+  --color-terracotta: #C87556;
+  --color-charcoal: #242923;
+}
+
+body {
+  background-color: #F7F3EB;
+  color: #242923;
+  background-image: 
+    radial-gradient(rgba(24, 61, 50, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  overflow-x: hidden;
+}
+
+/* Custom editorial styles */
+.font-serif-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.font-editorial-sub {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Stitching / craft border effect */
+.border-stitch {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(167, 183, 160, 0.6);
+}
+
+.border-stitch-terracotta {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(200, 117, 86, 0.6);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F3EB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D5DFC8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A7B7A0;
+}
+
+/* Keyframes for subtle scanning animation */
+@keyframes fabricScan {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    top: 96%;
+    opacity: 1;
+  }
+  100% {
+    top: 0%;
+    opacity: 0.8;
+  }
+}
+
+.animate-scan-line {
+  animation: fabricScan 2.6s ease-in-out infinite;
+}
+
+/* Gentle pulse glow */
+@keyframes gentleGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(200, 117, 86, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(200, 117, 86, 0.45);
+  }
+}
+
+.animate-glow-terracotta {
+  animation: gentleGlow 3s ease-in-out infinite;
+}
