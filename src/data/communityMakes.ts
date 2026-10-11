@@ -20,7 +20,7 @@ export const COMMUNITY_MAKES: CommunityMake[] = [
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
     projectName: 'Boro Patchwork Sashiko Chore Jacket',
     fabricOrigin: '3 damaged denim jeans + vintage linen offcuts',
-    beforeScrapUrl: 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?auto=format&fit=crop&w=800&q=80',
+    beforeScrapUrl: 'https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=800&q=80',
     afterMakeUrl: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80',
     quote: 'Instead of discarding fraying denim hem cutoffs, ReStylee showed me how to piece them into a wearable statement piece with running sashiko stitches.',
     timeSpent: '5.5 hours',

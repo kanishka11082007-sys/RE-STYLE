@@ -10,12 +10,10 @@ import {
   Scan, 
   HelpCircle,
   Eye,
-  AlertCircle,
-  Layers
+  AlertCircle
 } from 'lucide-react';
 import { SAMPLE_FABRICS } from '../data/mockFabrics';
 import type { FabricSample } from '../data/mockFabrics';
-import { inspectFabricImage } from '../api/generateDesigns';
 
 interface FabricStudioProps {
   currentFabric: FabricSample;
@@ -36,8 +34,6 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [isInspectingImage, setIsInspectingImage] = useState(false);
-  const [inspectionBadge, setInspectionBadge] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Directly derive values from currentFabric as the single source of truth
@@ -106,15 +102,16 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
       setUploadError('Failed to read image file. Please try again or select another image.');
     };
 
-    reader.onload = async (event) => {
+    reader.onload = (event) => {
       const result = event.target?.result as string;
       const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || 'Uploaded Fabric Remnant';
       
+      // Clearly label as custom user upload with prototype illustrative parameters
       const customSample: FabricSample = {
         id: `custom-upload-${Date.now()}`,
         name: cleanName,
-        material: 'Analyzing fiber with Gemini Vision...',
-        weave: 'Inspecting weave...',
+        material: 'Custom Textile Remnant (User Defined)',
+        weave: 'Tactile Woven Scrap',
         weightGsm: 220,
         condition: condition,
         dimensions: { width, height, unit },
@@ -124,62 +121,11 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
           { name: 'Denim Slate', hex: '#496E8A' },
           { name: 'Warm Coral', hex: '#C96F52' },
         ],
-        texture: 'Analyzing textile photo texture with AI...',
+        texture: 'Custom user-uploaded remnant evaluated with illustrative prototype parameters',
         imageUrl: result,
         tagline: 'Custom uploaded piece prepared for circular pattern matching.',
       };
       onFabricChange(customSample);
-
-      setIsInspectingImage(true);
-      setInspectionBadge('Scanning weave & fiber texture with Gemini Multimodal Vision...');
-
-      try {
-        const res = await inspectFabricImage(result);
-        if (res.success && res.inspection) {
-          const insp = res.inspection;
-          const validConditions = ['Crisp Remnant', 'Gently Washed', 'Vintage Worn', 'Frayed Scrap'] as const;
-          const finalCond = validConditions.includes(insp.condition as any)
-            ? (insp.condition as typeof validConditions[number])
-            : condition;
-
-          const formattedColors = Array.isArray(insp.colorPalette) && insp.colorPalette.length > 0
-            ? insp.colorPalette.map((c: any, i: number) => {
-                if (typeof c === 'string') return { name: `Tone ${i + 1}`, hex: c };
-                return { name: c.name || `Tone ${i + 1}`, hex: c.hex || '#253247' };
-              })
-            : customSample.colorPalette;
-
-          const detectedFiber = insp.fiberType || 'Natural Fiber';
-          const updatedSample: FabricSample = {
-            ...customSample,
-            name: insp.suggestedName || `${detectedFiber} Remnant`,
-            material: detectedFiber,
-            weave: insp.weave || 'Woven Structure',
-            weightGsm: insp.weightGsm || 220,
-            condition: finalCond,
-            texture: insp.texture || customSample.texture,
-            tagline: insp.tagline || customSample.tagline,
-            colorPalette: formattedColors,
-          };
-          onFabricChange(updatedSample);
-          setInspectionBadge(`✨ AI Detected: ${detectedFiber} • ${insp.weave || 'Woven'} • ~${insp.weightGsm || 220} GSM`);
-        } else {
-          onFabricChange({
-            ...customSample,
-            material: cleanName,
-          });
-          setInspectionBadge(null);
-        }
-      } catch (err) {
-        console.warn('[Vision Inspection Notice]', err);
-        onFabricChange({
-          ...customSample,
-          material: cleanName,
-        });
-        setInspectionBadge(null);
-      } finally {
-        setIsInspectingImage(false);
-      }
     };
 
     reader.readAsDataURL(file);
@@ -201,7 +147,6 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
 
   const handleSelectSample = (sample: FabricSample) => {
     setUploadError(null);
-    setInspectionBadge(null);
     onFabricChange(sample);
   };
 
@@ -262,9 +207,6 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
                     <img 
                       src={sample.imageUrl} 
                       alt={sample.name} 
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?auto=format&fit=crop&w=800&q=80';
-                      }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     />
                     {isSelected && (
@@ -362,9 +304,6 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
                     <img
                       src={currentFabric.imageUrl}
                       alt={currentFabric.name}
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?auto=format&fit=crop&w=800&q=80';
-                      }}
                       className="w-full h-full object-cover min-h-[320px] sm:min-h-[360px]"
                     />
                     
@@ -448,89 +387,6 @@ export const FabricStudio: React.FC<FabricStudioProps> = ({
                 <p className="text-xs text-charcoal-muted mt-1">
                   Adjust physical metrics to filter and size suitable zero-waste cutting patterns.
                 </p>
-              </div>
-
-              {/* Fiber & Material Profile (Supports AI Vision & Quick-Select) */}
-              <div className="p-4 rounded-2xl bg-paper-100 border border-navy/15 space-y-3">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="fabric-material-input" className="text-xs font-bold text-navy uppercase tracking-wider flex items-center gap-1.5 font-mono">
-                    <Layers className="w-3.5 h-3.5 text-coral" />
-                    Fiber Composition & Type
-                  </label>
-                  {isInspectingImage && (
-                    <span className="text-[10px] font-mono font-bold text-coral flex items-center gap-1 animate-pulse">
-                      <Sparkles className="w-3 h-3 animate-spin" />
-                      Gemini Vision Active
-                    </span>
-                  )}
-                </div>
-
-                {/* AI Detection Banner */}
-                {inspectionBadge && (
-                  <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between gap-2 animate-fadeIn">
-                    <span className="font-mono text-[11px] leading-tight font-medium">
-                      {inspectionBadge}
-                    </span>
-                  </div>
-                )}
-
-                {/* Editable Material Input */}
-                <div>
-                  <input
-                    id="fabric-material-input"
-                    type="text"
-                    value={currentFabric.material}
-                    onChange={(e) => {
-                      onFabricChange({
-                        ...currentFabric,
-                        material: e.target.value,
-                        name: currentFabric.name.includes('Remnant') ? `${e.target.value} Remnant` : currentFabric.name,
-                      });
-                    }}
-                    placeholder="e.g. Mulberry Silk, Raw Indigo Denim, Washed Linen..."
-                    className="w-full bg-paper border border-navy/20 rounded-xl px-3.5 py-2 text-xs font-serif font-bold text-navy focus:outline-none focus:ring-2 focus:ring-navy/30"
-                  />
-                  <span className="text-[10px] text-charcoal-muted mt-1 block">
-                    Type your specific fiber or click a preset below to tailor zero-waste patterns & live research.
-                  </span>
-                </div>
-
-                {/* Quick Fiber Presets */}
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {[
-                    'Mulberry Silk',
-                    'Raw Indigo Denim',
-                    'Washed Linen',
-                    'Merino Wool',
-                    'Organic Cotton',
-                    'Wide Corduroy',
-                    'Plush Velvet',
-                    'Heavy Canvas'
-                  ].map((preset) => {
-                    const isCurrent = currentFabric.material.toLowerCase().includes(preset.toLowerCase().split(' ').pop() || '');
-                    return (
-                      <button
-                        key={preset}
-                        type="button"
-                        onClick={() => {
-                          onFabricChange({
-                            ...currentFabric,
-                            material: preset,
-                            name: `${preset} Studio Remnant`,
-                          });
-                          setInspectionBadge(`✨ Selected: ${preset}`);
-                        }}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all ${
-                          isCurrent
-                            ? 'bg-navy text-paper font-bold shadow-xs'
-                            : 'bg-paper border border-navy/15 text-charcoal hover:border-coral hover:text-coral'
-                        }`}
-                      >
-                        {preset}
-                      </button>
-                    );
-                  })}
-                </div>
               </div>
 
               {/* Dimensions Input with Unit Toggle */}

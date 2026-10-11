@@ -28,7 +28,7 @@ export const SAMPLE_FABRICS: FabricSample[] = [
       { name: 'Copper Thread', hex: '#C96F52' },
     ],
     texture: 'Sturdy, structured, tactile rib texture with authentic fading',
-    imageUrl: 'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=800&q=80',
     tagline: 'Ideal for structured utility cases, reinforced bags, and sashiko boro mending.',
   },
   {
@@ -46,7 +46,7 @@ export const SAMPLE_FABRICS: FabricSample[] = [
       { name: 'Golden Thread', hex: '#D6AD64' },
     ],
     texture: 'Softly slubbed, airy drape with natural crumpled texture',
-    imageUrl: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80',
     tagline: 'Effortless relaxed drape, perfect for tea ceremony coasters, bento wraps, and table goods.',
   },
   {
@@ -64,7 +64,7 @@ export const SAMPLE_FABRICS: FabricSample[] = [
       { name: 'Muted Gold', hex: '#D6AD64' },
     ],
     texture: 'Velvety ribbed surface, tactile warmth and structured body',
-    imageUrl: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80',
     tagline: 'Plush hand-feel suited for pocket organizers, scrunchies, and cozy pouch linings.',
   },
   {

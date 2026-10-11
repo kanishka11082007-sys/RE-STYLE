@@ -12,7 +12,6 @@ import { Footer } from './components/Footer';
 import { SAMPLE_FABRICS } from './data/mockFabrics';
 import type { FabricSample } from './data/mockFabrics';
 import type { UpcycleIdea } from './data/upcyclingIdeas';
-import { generateDesigns, type DesignConcept } from './api/generateDesigns';
 
 export const App: React.FC = () => {
   const [currentFabric, setCurrentFabric] = useState<FabricSample>(SAMPLE_FABRICS[0]);
@@ -20,9 +19,6 @@ export const App: React.FC = () => {
   const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
   const [selectedIdeaForGuide, setSelectedIdeaForGuide] = useState<UpcycleIdea | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [aiDesigns, setAiDesigns] = useState<DesignConcept[]>([]);
-  const [aiTrends, setAiTrends] = useState<Array<{ title: string; snippet: string; url: string }>>([]);
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   // Smooth scroll helpers
   const scrollToStudio = () => {
@@ -49,34 +45,12 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleAnalyze = async (fabricToAnalyze: FabricSample) => {
+  const handleAnalyze = (_fabric: FabricSample) => {
     setIsAnalyzing(true);
     setIsAnalysisModalOpen(true);
-    setIsAiLoading(true);
-
-    try {
-      const preferredFiber = fabricToAnalyze.material && !fabricToAnalyze.material.includes('User Defined')
-        ? fabricToAnalyze.material
-        : fabricToAnalyze.name;
-
-      const response = await generateDesigns({
-        fabricType: preferredFiber,
-        quantity: `${fabricToAnalyze.dimensions.width}×${fabricToAnalyze.dimensions.height} ${fabricToAnalyze.dimensions.unit} remnant (${fabricToAnalyze.weightGsm} GSM)`,
-        cost: '$14.00/meter',
-        preferences: fabricToAnalyze.tagline || 'Zero-waste contemporary silhouettes and circular accessories',
-        image: fabricToAnalyze.imageUrl,
-      });
-
-      if (response.success && response.designs) {
-        setAiDesigns(response.designs);
-        setAiTrends(response.trends || []);
-      }
-    } catch (err) {
-      console.warn('[Re:Style API Notice] Backend not reached or fallback mode active:', err);
-    } finally {
-      setIsAiLoading(false);
+    setTimeout(() => {
       setIsAnalyzing(false);
-    }
+    }, 2800);
   };
 
   return (
@@ -142,9 +116,6 @@ export const App: React.FC = () => {
         onClose={() => setIsAnalysisModalOpen(false)}
         fabric={currentFabric}
         onViewRecommendations={scrollToIdeas}
-        aiDesigns={aiDesigns}
-        liveTrends={aiTrends}
-        isAiLoading={isAiLoading}
       />
 
       {/* Warm Editorial Footer */}
